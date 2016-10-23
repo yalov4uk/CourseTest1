@@ -1,0 +1,6 @@
+C:\Codes\CourseTest1\CourseTest1\bin\Debug\CourseTest1.exe.config
+C:\Codes\CourseTest1\CourseTest1\obj\Debug\CourseTest1.csprojResolveAssemblyReference.cache
+C:\Codes\CourseTest1\CourseTest1\bin\Debug\CourseTest1.exe
+C:\Codes\CourseTest1\CourseTest1\bin\Debug\CourseTest1.pdb
+C:\Codes\CourseTest1\CourseTest1\obj\Debug\CourseTest1.exe
+C:\Codes\CourseTest1\CourseTest1\obj\Debug\CourseTest1.pdb
