@@ -1,0 +1,5 @@
+C:\Codes\CourseTest1\CourseTest1\bin\Release\CourseTest1.exe.config
+C:\Codes\CourseTest1\CourseTest1\bin\Release\CourseTest1.exe
+C:\Codes\CourseTest1\CourseTest1\bin\Release\CourseTest1.pdb
+C:\Codes\CourseTest1\CourseTest1\obj\Release\CourseTest1.exe
+C:\Codes\CourseTest1\CourseTest1\obj\Release\CourseTest1.pdb

